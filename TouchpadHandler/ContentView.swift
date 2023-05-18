@@ -19,7 +19,7 @@ protocol TouchpadHandler {
     )
 }
 
-// MARK: - UIKIT UIVIEWREPRESENTABLE
+// MARK: - UIKit UIViewRepresentable
 struct MyView: UIViewRepresentable {
     
     let isMultipleTouchEnabled: Bool
@@ -69,11 +69,15 @@ struct FingerIndexes {
 // MARK: - TOUCH DELEGATES
 class TouchableView: UIView, TouchpadHandler {
     
-    private var isDetailed = false
     private var fingerIndexes = FingerIndexes()
    
     func onButtonEvent(isPressed: Bool) {
-        
+        switch isPressed {
+        case true:
+            print("Button is pressed")
+        default:
+            print("Button is unpressed")
+        }
     }
     
     func onTouchEvent(idx: Int, x: Double, y: Double) {
@@ -87,22 +91,23 @@ class TouchableView: UIView, TouchpadHandler {
             let x = Double(touchLocation.x * 100 / self.bounds.width)
             let y = Double(touchLocation.y * 100 / self.bounds.height)
             let idx = fingerIndexes.indexElement(touch)
-            onTouchEvent(idx: idx, x: x, y: y)
+            if self.isMultipleTouchEnabled {
+                onTouchEvent(idx: idx, x: x, y: y)
+            } else {
+                onButtonEvent(isPressed: true)
+            }
         }
     }
     
     override func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent?) {
-        for touch in touches {
-            let touchLocation = touch.location(in: self)
-            isDetailed ? print("Touch with index \(touch.hash) moved to \(touchLocation)") : nil
-        }
     }
     
     override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
         for touch in touches {
             fingerIndexes.removeElement(touch)
-            let touchLocation = touch.location(in: self)
-            isDetailed ? print("Touch with index \(touch.hash) ended at \(touchLocation)") : nil
+            if !self.isMultipleTouchEnabled {
+                onButtonEvent(isPressed: false)
+            }
         }
     }
 }
