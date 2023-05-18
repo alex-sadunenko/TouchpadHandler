@@ -9,19 +9,15 @@ import SwiftUI
 
 class TouchableView: UIView, TouchpadHandler {
     
+    var touchpadHandler: TouchpadHandler?
     private var fingerIndexes = FingerIndexes()
    
     func onButtonEvent(isPressed: Bool) {
-        switch isPressed {
-        case true:
-            print("Button is pressed")
-        default:
-            print("Button is unpressed")
-        }
+        touchpadHandler?.onButtonEvent(isPressed: isPressed)
     }
     
     func onTouchEvent(idx: Int, x: Double, y: Double) {
-        print("Touch with index \(idx) at width: \(round(x))% height: \(round(y))%")
+        touchpadHandler?.onTouchEvent(idx: idx, x: x, y: y)
     }
 
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
@@ -40,6 +36,7 @@ class TouchableView: UIView, TouchpadHandler {
     }
     
     override func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent?) {
+        // DO SOMETHING HERE
     }
     
     override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {

@@ -10,12 +10,14 @@ import SwiftUI
 // MARK: - UIKit UIViewRepresentable
 struct MyView: UIViewRepresentable {
     
+    @Binding var touchpadHandler: TouchpadHandler
     let isMultipleTouchEnabled: Bool
     
     func makeUIView(context: Context) -> TouchableView {
         let touchableView = TouchableView()
         touchableView.isUserInteractionEnabled = true
         touchableView.isMultipleTouchEnabled = isMultipleTouchEnabled
+        touchableView.touchpadHandler = touchpadHandler
         return touchableView
     }
     

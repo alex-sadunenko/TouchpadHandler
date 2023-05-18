@@ -8,18 +8,18 @@
 import SwiftUI
 
 struct TouchPadView: View {
-
+    
+    @StateObject private var viewModel: TouchableViewModel = TouchableViewModel()
     @State var isButtonHidden = false
+    
+    // MARK: - PARAMS
     @State private var cornerRadius: CGFloat = 0
     @State private var scale: CGFloat = 1.0
     
     var body: some View {
         
         VStack {
-            
-            Spacer()
-            
-            MyView(isMultipleTouchEnabled: true)
+            MyView(touchpadHandler: .constant(viewModel), isMultipleTouchEnabled: viewModel.touchPadMultiTouchEnabled)
                 .frame(width: .none, height: isButtonHidden ? 400 : 300)
                 .background(.blue)
                 .border(.blue)
@@ -27,7 +27,7 @@ struct TouchPadView: View {
                 .cornerRadius(cornerRadius)
                 .animation(Animation.interpolatingSpring(stiffness: 160, damping: 18), value: isButtonHidden)
             
-            MyView(isMultipleTouchEnabled: false)
+            MyView(touchpadHandler: .constant(viewModel), isMultipleTouchEnabled: viewModel.buttonMultiTouchEnabled)
                 .frame(width: .none, height: isButtonHidden ? 0 : 100)
                 .background(.yellow)
                 .border(.yellow)
@@ -35,12 +35,10 @@ struct TouchPadView: View {
                 .cornerRadius(20, corners: [.bottomLeft, .bottomRight])
                 .animation(Animation.interpolatingSpring(stiffness: 160, damping: 18), value: isButtonHidden)
             
-            Spacer()
-            
             Button(isButtonHidden ? labelTouchPadWithButton : labelTouchPadOnly,
                    action: buttonAction)
             .font(.title2)
-            .padding()
+            .padding(.top, 50)
         }
         .padding()
     }
@@ -53,7 +51,7 @@ struct TouchPadView: View {
             scale = scale == 1.0 ? 0.1 : 1.0
         }
     }
-
+    
 }
 
 struct TouchPadView_Previews: PreviewProvider {
