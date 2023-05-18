@@ -25,7 +25,7 @@ struct TouchPadView: View {
                 .border(.blue)
                 .cornerRadius(20, corners: [.topLeft, .topRight])
                 .cornerRadius(cornerRadius)
-                .animation(.easeInOut(duration: 0.5), value: 0)
+                .animation(Animation.interpolatingSpring(stiffness: 160, damping: 18), value: isButtonHidden)
             
             MyView(isMultipleTouchEnabled: false)
                 .frame(width: .none, height: isButtonHidden ? 0 : 100)
@@ -33,23 +33,27 @@ struct TouchPadView: View {
                 .border(.yellow)
                 .scaleEffect(scale)
                 .cornerRadius(20, corners: [.bottomLeft, .bottomRight])
-                .animation(.easeInOut(duration: 0.5), value: 0)
+                .animation(Animation.interpolatingSpring(stiffness: 160, damping: 18), value: isButtonHidden)
             
             Spacer()
             
-            Button(isButtonHidden ? "Touchpad with Button" : "Touchpad only") {
-                withAnimation {
-                    isButtonHidden.toggle()
-                    cornerRadius = cornerRadius == 0 ? 20 : 0
-                    scale = scale == 1.0 ? 0.1 : 1.0
-                }
-            }
+            Button(isButtonHidden ? labelTouchPadWithButton : labelTouchPadOnly,
+                   action: buttonAction)
             .font(.title2)
             .padding()
         }
         .padding()
-        
     }
+    
+    // MARK: - ACTIONS
+    private func buttonAction() {
+        withAnimation {
+            isButtonHidden.toggle()
+            cornerRadius = cornerRadius == 0 ? 20 : 0
+            scale = scale == 1.0 ? 0.1 : 1.0
+        }
+    }
+
 }
 
 struct TouchPadView_Previews: PreviewProvider {
